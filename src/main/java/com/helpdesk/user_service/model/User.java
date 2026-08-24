@@ -37,7 +37,8 @@ public class User{
     @Column(nullable = false)
     private boolean active;
 
-    @CreationTimestamp
-    private LocalDateTime createdAt;
+    @Column(name = "created_at", insertable = false)
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date createdAt;
 
 }
