@@ -1,17 +1,14 @@
 package com.helpdesk.user_service.model;
 
-import com.helpdesk.user_service.role.UserRole;
+import com.helpdesk.user_service.enums.UserRole;
 
-import java.time.LocalDateTime;
-
-import javax.annotation.processing.Generated;
-import javax.persistence.Entity;
-import javax.persistence.Table;
-
+import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.Date;
+
 @Entity
-@Table(name = "user")
+@Table(name = "users_db")
 @Getter
 @Setter
 @AllArgsConstructor

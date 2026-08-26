@@ -1,6 +1,6 @@
-package main.java.com.helpdesk.user_service.enums;
+package com.helpdesk.user_service.enums;
 
-enum UserRole {
+public enum UserRole {
     CLIENT,
     TECHNICIAN,
     ADMIN
