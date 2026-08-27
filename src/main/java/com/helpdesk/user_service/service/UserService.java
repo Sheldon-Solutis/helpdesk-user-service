@@ -48,4 +48,10 @@ public class UserService {
         response.setRole(savedUser.getRole());
         return response;
     }
+
+    public UserResponseDto deleteUser(String email) {
+        User user = userRepository.findByEmailActiveTrue(email);
+        user.setActive(false);
+        return new UserResponseDto(user);
+    }
 }
