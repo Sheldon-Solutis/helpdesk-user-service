@@ -5,6 +5,7 @@ import com.helpdesk.user_service.dto.UserResponseDto;
 import com.helpdesk.user_service.model.User;
 import com.helpdesk.user_service.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,9 +29,15 @@ public class UserController {
         return ResponseEntity.ok(signedUser);
     }
 
-    @DeleteMapping
-    public ResponseEntity<UserResponseDto> deleteUser(String email) {
-        UserResponseDto deletedUser = userService.deleteUser(email);
-        return ResponseEntity.ok(deletedUser);
+    @DeleteMapping("/{email}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteUser(@PathVariable String email) {
+        userService.deleteUser(email);
+    }
+
+    @PostMapping("/{email}")
+    public ResponseEntity<UserResponseDto> reactiveUser(@PathVariable String email) {
+        UserResponseDto response = userService.reActiveUser(email);
+        return ResponseEntity.ok(response);
     }
 }

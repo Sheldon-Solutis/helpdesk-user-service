@@ -8,6 +8,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
 
+import java.sql.Timestamp;
+import java.time.Instant;
 import java.util.Date;
 import java.util.List;
 
@@ -18,40 +20,36 @@ public class UserService {
     private final UserRepository userRepository;
 
     public List<UserResponseDto> findAll() {
-        return userRepository.findAll()
+        return userRepository.findAllByActiveTrue()
                 .stream()
-                .map( user -> {
-                    UserResponseDto dto = new UserResponseDto();
-                    dto.setName(user.getName());
-                    dto.setEmail(user.getEmail());
-                    dto.setRole(user.getRole());
-
-                    return dto;
-                })
+                .map(UserResponseDto::new)
                 .toList();
     }
 
     public UserResponseDto createUser(@RequestBody UserCreateDto user) {
-        User userEntity = new User();
+        User newUser = new User();
 
-        userEntity.setEmail(user.getEmail());
-        userEntity.setName(user.getName());
-        userEntity.setRole(user.getRole());
-        userEntity.setCreatedAt(new Date());
-        userEntity.setActive(true);
+        newUser.setEmail(user.getEmail());
+        newUser.setName(user.getName());
+        newUser.setRole(user.getRole());
+        userRepository.save(newUser);
 
-        User savedUser = userRepository.save(userEntity);
-
-        UserResponseDto response = new UserResponseDto();
-        response.setEmail(savedUser.getEmail());
-        response.setName(savedUser.getName());
-        response.setRole(savedUser.getRole());
-        return response;
+        return new UserResponseDto(newUser);
     }
 
-    public UserResponseDto deleteUser(String email) {
-        User user = userRepository.findByEmailActiveTrue(email);
+    public void deleteUser(String email) {
+        User user = userRepository.findByEmail(email);
+
         user.setActive(false);
+        userRepository.save(user);
+    }
+
+    public UserResponseDto reActiveUser(String email){
+        User user = userRepository.findByEmail(email);
+
+        user.setActive(true);
+        userRepository.save(user);
+
         return new UserResponseDto(user);
     }
 }
