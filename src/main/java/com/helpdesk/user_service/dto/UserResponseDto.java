@@ -9,6 +9,7 @@ import lombok.*;
 @Setter
 @ToString
 public class UserResponseDto {
+    private Long id;
     private String name;
     private String email;
     private UserRole role;
@@ -17,6 +18,7 @@ public class UserResponseDto {
     public UserResponseDto(){}
 
     public UserResponseDto(User user) {
+        this.id = user.getId();
         this.name = user.getName();
         this.email = user.getEmail();
         this.role = user.getRole();
