@@ -1,10 +1,10 @@
 package com.helpdesk.user_service.controller;
 
 import com.helpdesk.user_service.dto.UserCreateDto;
-import com.helpdesk.user_service.dto.UserPatchDto;
+import com.helpdesk.user_service.dto.UserUpdateDto;
 import com.helpdesk.user_service.dto.UserResponseDto;
-import com.helpdesk.user_service.model.User;
 import com.helpdesk.user_service.service.UserService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,22 +27,25 @@ public class UserController {
         return ResponseEntity.ok(userService.findAll());
     }
 
-    @GetMapping("/^{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<UserResponseDto> findById(@PathVariable Long id) {
         UserResponseDto response = userService.findUserById(id);
         return ResponseEntity.ok(response);
     }
 
-    @PutMapping("/{id}")
+    @PatchMapping("/{id}")
     public ResponseEntity<UserResponseDto> updateUser(
             @PathVariable Long id,
-            @RequestBody UserPatchDto dto) {
+            @RequestBody @Valid UserUpdateDto dto) {
+
         UserResponseDto response = userService.updateUser(id, dto);
+
         return ResponseEntity.ok(response);
     }
 
     @PostMapping()
-    public ResponseEntity<UserResponseDto> createUser(@RequestBody UserCreateDto user) {
+    public ResponseEntity<UserResponseDto> createUser(
+            @RequestBody @Valid UserCreateDto user) {
         UserResponseDto signedUser = userService.createUser(user);
 
         // Padrão RESTful
@@ -54,21 +57,15 @@ public class UserController {
         return ResponseEntity.created(location).body(signedUser);
     }
 
-    @DeleteMapping("/{email}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteUser(@PathVariable String email) {
-        userService.deleteUserByEmail(email);
-    }
-
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteUser(@PathVariable Long id) {
         userService.deleteUserById(id);
     }
 
-    @PostMapping("/{email}")
-    public ResponseEntity<UserResponseDto> reactiveUser(@PathVariable String email) {
-        UserResponseDto response = userService.reActiveUser(email);
+    @PostMapping("/{id}")
+    public ResponseEntity<UserResponseDto> reactiveUser(@PathVariable Long id) {
+        UserResponseDto response = userService.reActiveUser(id);
         return ResponseEntity.ok(response);
     }
 }

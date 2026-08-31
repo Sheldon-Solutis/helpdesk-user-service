@@ -7,7 +7,7 @@ import lombok.*;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "users_db")
+@Table(name = "users")
 @Getter
 @Setter
 @AllArgsConstructor
@@ -32,9 +32,6 @@ public class User {
     @Builder.Default
     @Column(nullable = false)
     private boolean active = true;
-
-    @Column(nullable = false)
-    private String password;
 
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;

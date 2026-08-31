@@ -11,7 +11,6 @@ import lombok.*;
 public class UserResponseDto {
     private Long id;
     private String name;
-    private String email;
     private UserRole role;
     private boolean active;
 
@@ -20,7 +19,6 @@ public class UserResponseDto {
     public UserResponseDto(User user) {
         this.id = user.getId();
         this.name = user.getName();
-        this.email = user.getEmail();
         this.role = user.getRole();
         this.active = user.isActive();
     }
