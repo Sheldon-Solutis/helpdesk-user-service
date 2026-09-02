@@ -4,6 +4,7 @@ import com.helpdesk.user_service.dto.UserCreateDto;
 import com.helpdesk.user_service.dto.UserUpdateDto;
 import com.helpdesk.user_service.dto.UserResponseDto;
 import com.helpdesk.user_service.service.UserService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -15,8 +16,9 @@ import java.net.URI;
 import java.util.List;
 
 @RestController
-@RequestMapping("/users")
+@RequestMapping("/api/users")
 @RequiredArgsConstructor
+@Tag(name = "Users", description = "Cadastro e gestão de usuários (clientes, técnicos e administradores)")
 public class UserController {
 
     private final UserService userService;

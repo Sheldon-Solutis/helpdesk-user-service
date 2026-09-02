@@ -1,11 +1,15 @@
 package com.helpdesk.user_service.dto;
 
+import jakarta.validation.constraints.Email;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
 public class UserUpdateDto {
+
     private String name;
+
+    @Email
     private String email;
 }
