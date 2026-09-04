@@ -1,6 +1,5 @@
 package com.helpdesk.user_service.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.helpdesk.user_service.dto.UserCreateDto;
 import com.helpdesk.user_service.dto.UserResponseDto;
 import com.helpdesk.user_service.enums.UserRole;
@@ -14,6 +13,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.server.ResponseStatusException;
+import tools.jackson.databind.json.JsonMapper;
 
 import java.util.List;
 
@@ -23,14 +23,14 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+
 @WebMvcTest(UserController.class)
 class UserControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
 
-    @Autowired
-    private ObjectMapper objectMapper;
+    private final JsonMapper objectMapper = JsonMapper.builder().build();
 
     @MockitoBean
     private UserService userService;
@@ -63,7 +63,7 @@ class UserControllerTest {
         UserCreateDto invalid = new UserCreateDto();
         invalid.setName("");
         invalid.setEmail("nao-e-um-email");
-        // role nula
+        // role deliberadamente nula
 
         mockMvc.perform(post("/api/users")
                         .contentType(MediaType.APPLICATION_JSON)
