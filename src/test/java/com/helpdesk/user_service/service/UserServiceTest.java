@@ -120,7 +120,7 @@ class UserServiceTest {
                 .role(UserRole.CLIENT).active(true).build();
         UserUpdateDto dto = new UserUpdateDto();
         dto.setName("Carlos Novo");
-        // email deliberadamente em branco: não deve validar unicidade nem mudar o e-mail
+        // email em branco
 
         when(userRepository.findById(5L)).thenReturn(Optional.of(existing));
         when(userRepository.save(any(User.class))).thenAnswer(inv -> inv.getArgument(0));

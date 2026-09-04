@@ -3,31 +3,31 @@ package com.helpdesk.user_service.exception;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDateTime;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-// Faltava esse handler (a pasta já existia, vazia). EntityNotFoundException
-// não vira 404 sozinha; sem isso a API devolvia 500 pra qualquer "não
-// encontrado". ResponseStatusException (usada no service pra e-mail
-// duplicado) o Spring já resolve certo sem precisar de handler aqui.
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(EntityNotFoundException.class)
     public ResponseEntity<Map<String, Object>> handleNotFound(EntityNotFoundException ex) {
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(body(HttpStatus.NOT_FOUND, ex.getMessage()));
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body(body(HttpStatus.NOT_FOUND, ex.getMessage()));
     }
 
     @ExceptionHandler(ResponseStatusException.class)
     public ResponseEntity<Map<String, Object>> handleResponseStatus(ResponseStatusException ex) {
         HttpStatus status = HttpStatus.valueOf(ex.getStatusCode().value());
-        return ResponseEntity.status(status).body(body(status, ex.getReason()));
+        return ResponseEntity.status(status)
+                .body(body(status, ex.getReason()));
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
@@ -36,7 +36,22 @@ public class GlobalExceptionHandler {
                 .map(fe -> fe.getField() + ": " + fe.getDefaultMessage())
                 .reduce((a, b) -> a + "; " + b)
                 .orElse("Dados inválidos");
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(body(HttpStatus.BAD_REQUEST, message));
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(body(HttpStatus.BAD_REQUEST, message));
+    }
+
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public ResponseEntity<Map<String, Object>> handleMalformedJson(HttpMessageNotReadableException ex) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(body(HttpStatus.BAD_REQUEST,
+                        "Corpo da requisição inválido — confira os valores de enum enviados"));
+    }
+
+    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+    public ResponseEntity<Map<String, Object>> handleTypeMismatch(MethodArgumentTypeMismatchException ex) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(body(HttpStatus.BAD_REQUEST,
+                        "Parâmetro '" + ex.getName() + "' recebeu um valor inválido: " + ex.getValue()));
     }
 
     @ExceptionHandler(Exception.class)

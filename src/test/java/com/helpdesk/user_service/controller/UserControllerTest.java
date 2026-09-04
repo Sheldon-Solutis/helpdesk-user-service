@@ -63,7 +63,7 @@ class UserControllerTest {
         UserCreateDto invalid = new UserCreateDto();
         invalid.setName("");
         invalid.setEmail("nao-e-um-email");
-        // role deliberadamente nula
+        // role nula
 
         mockMvc.perform(post("/api/users")
                         .contentType(MediaType.APPLICATION_JSON)
